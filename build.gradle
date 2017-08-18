@@ -22,7 +22,7 @@ apply plugin: 'idea'
 
 apply plugin: 'org.springframework.boot'
 
-version = '1.0'
+version = "1.0.${project.buildNumber}"
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
@@ -65,4 +65,22 @@ dependencies {
 jar {
     baseName = "spring-music"
     version = "" // omit the version from the war file name
+}
+
+group = "com.nisum.spring-music.${project.username}"
+
+uploadArchives {
+    repositories {
+        maven {
+            credentials {
+                username "${artifactoryUserName}"
+                password "${artifactoryPassword}"
+            }
+            url "${artifactoryUrl}"
+        }
+    }
+}
+
+task wrapper(type: Wrapper) {
+  gradleVersion = '4.1'
 }
