@@ -22,9 +22,16 @@ pipeline {
 
     stage('Deploy') {
       steps {
-        sh 'ssh vagrant@172.28.128.3 "rm -rf *.jar || true" "pkill -9 -f spring-music || true"'
+        sh 'ssh -o StrictHostKeyChecking=no -oBatchMode=yes vagrant@172.28.128.3 "rm -rf *.jar || true"'
+        sh 'ssh vagrant@172.28.128.3 "nohup pkill -9 -f spring-music || true &"'
+        // sh 'sleep 10'
         sh 'scp ./build/libs/spring-music.jar vagrant@172.28.128.3:/home/vagrant'
-        sh 'ssh vagrant@172.28.128.3 "nohup java -jar /home/vagrant/spring-music.jar &"'
+        sh 'ssh vagrant@172.28.128.3 "java -jar /home/vagrant/spring-music.jar > ./server.log &"'
+        sh """
+            ssh vagrant@172.28.128.3 'until fgrep -q "Tomcat started on port(s)" ./server.log;
+            do sleep 3 && echo "."; done'"""
+        sh 'ssh vagrant@172.28.128.3 "cat ./server.log"'
+        echo 'Application is running at http://172.28.128.3:8080'
       }
     }
   }
