@@ -3,6 +3,8 @@
 spring:
   jpa:
     generate-ddl: true
+server:
+    port: 8090
 
 # turn off the security on the actuator end points as this is a demo app
 management:

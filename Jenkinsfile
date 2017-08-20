@@ -31,7 +31,7 @@ pipeline {
             ssh vagrant@172.28.128.3 'until fgrep -q "Tomcat started on port(s)" ./server.log;
             do sleep 3 && echo "."; done'"""
         sh 'ssh vagrant@172.28.128.3 "cat ./server.log"'
-        echo 'Application is running at http://172.28.128.3:8080'
+        echo 'Application is running at http://172.28.128.3:8090'
       }
     }
   }
